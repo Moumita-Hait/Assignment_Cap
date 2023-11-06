@@ -1,0 +1,125 @@
+_schema-version: "3.1"
+ID: AssignmentCap
+description: A simple CAP project.
+version: 1.0.0
+modules:
+- name: AssignmentCap-srv
+  type: nodejs
+  path: gen/srv
+  requires:
+  - name: AssignmentCap-db
+  - name: AssignmentCap-auth
+  - name: AssignmentCap-destination-service
+  provides:
+  - name: srv-api
+    properties:
+      srv-url: ${default-url}
+  parameters:
+    buildpack: nodejs_buildpack
+  build-parameters:
+    builder: npm
+- name: AssignmentCap-db-deployer
+  type: hdb
+  path: gen/db
+  requires:
+  - name: AssignmentCap-db
+  - name: AssignmentCap-auth
+  parameters:
+    buildpack: nodejs_buildpack
+- name: AssignmentCap-destination-content
+  type: com.sap.application.content
+  requires:
+  - name: AssignmentCap-destination-service
+    parameters:
+      content-target: true
+  - name: AssignmentCap_html_repo_host
+    parameters:
+      service-key:
+        name: AssignmentCap_html_repo_host-key
+  - name: AssignmentCap-auth
+    parameters:
+      service-key:
+        name: AssignmentCap-auth-key
+  parameters:
+    content:
+      instance:
+        destinations:
+        - Name: assignmentcap_AssignmentCap_html_repo_host
+          ServiceInstanceName: AssignmentCap-html5-app-host-service
+          ServiceKeyName: AssignmentCap_html_repo_host-key
+          sap.cloud.service: assignmentcap
+        - Authentication: OAuth2UserTokenExchange
+          Name: assignmentcap_AssignmentCap_auth
+          ServiceKeyName: AssignmentCap-auth-key
+          sap.cloud.service: assignmentcap
+        existing_destinations_policy: ignore
+  build-parameters:
+    no-source: true
+- name: AssignmentCap-app-content
+  type: com.sap.application.content
+  path: .
+  requires:
+  - name: AssignmentCap_html_repo_host
+    parameters:
+      content-target: true
+  build-parameters:
+    build-result: resources
+    requires:
+    - artifacts:
+      - employeetime.zip
+      name: employeetime
+      target-path: resources/
+- name: employeetime
+  type: html5
+  path: app/employeetime
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+resources:
+- name: AssignmentCap-auth
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      tenant-mode: dedicated
+    path: ./xs-security.json
+    service: xsuaa
+    service-plan: application
+- name: AssignmentCap-db
+  type: com.sap.xs.hdi-container
+  parameters:
+    service: hana
+    service-plan: hdi-shared
+- name: AssignmentCap-destination-service
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      HTML5Runtime_enabled: true
+      init_data:
+        instance:
+          destinations:
+          - Authentication: NoAuthentication
+            Name: ui5
+            ProxyType: Internet
+            Type: HTTP
+            URL: https://ui5.sap.com
+          existing_destinations_policy: update
+    service: destination
+    service-plan: lite
+- name: AssignmentCap_html_repo_host
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-name: AssignmentCap-html5-app-host-service
+    service-plan: app-host
+parameters:
+  deploy_mode: html5-repo
+  enable-parallel-deployments: true
+build-parameters:
+  before-all:
+  - builder: custom
+    commands:
+    - npx cds build --production

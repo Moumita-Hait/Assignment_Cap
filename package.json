@@ -1,0 +1,64 @@
+{
+    "name": "AssignmentCap",
+    "version": "1.0.0",
+    "description": "A simple CAP project.",
+    "repository": "<Add your repository here>",
+    "license": "UNLICENSED",
+    "private": true,
+    "dependencies": {
+        "@sap-cloud-sdk/http-client": "^3.7.0",
+        "@sap-cloud-sdk/resilience": "^3.7.0",
+        "@sap/cds": "^7",
+        "@sap/cds-hana": "^2",
+        "@sap/cds-odata-v2-adapter-proxy": "^1.9.21",
+        "express": "^4",
+        "passport": "^0.6.0",
+        "@sap/xsenv": "^3.3.2",
+        "@sap/xssec": "^3"
+    },
+    "devDependencies": {
+        "@cap-js/sqlite": "^1",
+        "@sap/cds-dk": "^7",
+        "rimraf": "^3.0.2"
+    },
+    "scripts": {
+        "start": "cds-serve",
+        "undeploy": "cf undeploy AssignmentCap --delete-services --delete-service-keys --delete-service-brokers",
+        "build": "rimraf resources mta_archives && mbt build --mtar archive",
+        "deploy": "cf deploy mta_archives/archive.mtar --retries 1"
+    },
+    "cds": {
+        "requires": {
+            "db": {
+                "[development]": {
+                    "kind": "sql"
+                },
+                "[production]": {
+                    "kind": "hana"
+                }
+            },
+            "auth": {
+                "[production]": {
+                    "strategy": "JWT"
+                },
+                "[development]": {
+                    "strategy": "mock",
+                    "users": {
+                        "manager": {
+                            "roles": [
+                                "authenticated-user"
+                            ]
+                        }
+                    }
+                }
+            },
+            "ECTimeOff": {
+                "kind": "odata-v2",
+                "model": "srv/external/ECTimeOff",
+                "credentials": {
+                    
+                }
+            }
+        }
+    }
+}
