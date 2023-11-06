@@ -23,3 +23,7 @@ File or Folder | Purpose
 ## Learn More
 
 Learn more at https://cap.cloud.sap/docs/get-started/.
+
+
+## Screen Shots
+Inside folder named "project_screenshot" in the root directory.
