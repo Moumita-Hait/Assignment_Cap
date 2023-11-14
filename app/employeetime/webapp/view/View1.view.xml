@@ -2,57 +2,11 @@
     xmlns:mvc="sap.ui.core.mvc" displayBlock="true"
     xmlns="sap.m">
     <Page id="page" title="{i18n>title}">
-         <Table
-                id="idProductsTable"
-                inset="false"
-                items="{
-                    path: '/EmployeeTime',
-                    sorter: {
-                        path: 'userId'
-                    }
-                }">
-                <headerToolbar>
-                    <OverflowToolbar id="_IDGenOverflowToolbar1">
-                        <content>
-                            <Title id="_IDGenTitle1"
-                                text="Employee Compensation Information"
-                                level="H2"
-                            />
-                        </content>
-                    </OverflowToolbar>
-                </headerToolbar>
-                <columns>
-                    <Column id="_IDGenColumn1">
-                        <Text id="_IDGenLabelText1" text="startDate" />
-                    </Column>
-                    <Column id="_IDGenColumn2">
-                        <Text id="_IDGenLabelText2" text="endDate" />
-                    </Column>
-                    <Column id="_IDGenColumn3">
-                        <Text id="_IDGenLabelText3" text="quantityInHours" />
-                    </Column>
-                    <Column id="_IDGenColumn4">
-                        <Text id="_IDGenLabelText4" text="quantityInDays" />
-                    </Column>
-                    <Column id="_IDGenColumn5">
-                        <Text id="_IDGenLabelText5" text="timeType" />
-                    </Column>
-                    <Column id="_IDGenColumn6">
-                        <Text id="_IDGenLabelText6" text="approvalStatus" />
-                    </Column>
-                </columns>
-                <items>
-                    <ColumnListItem id="_IDGenColumnListItem1" vAlign="Middle">
-                        <cells>
-                            <Text id="_IDGenText1" text="{startDate}" />
-                            <Text id="_IDGenText2" text="{endDate}"/>
-                            <Text id="_IDGenText3" text="{quantityInHours}" />
-                            <Text id="_IDGenText4" text="{quantityInDays}" />
-                            <Text id="_IDGenText5" text="{timeType}" />
-                            <Text id="_IDGenText6" text="{approvalStatus}" />
-                        </cells>
-                    </ColumnListItem>
-                </items>
-        </Table>
+    <VBox >
+         <Text text="Manager id is: 108743"/>
+         <Input id="startDate" type="Date" value="{/startDate}" name="StartDate" placeholder="Enter the Start Date:"/>
+         <Input id="endDate" type="Date" value="{/endDate}" name="EndDate" placeholder="Enter the End Date:"/>
+         <Button text="Show Direct Reportees Details" press="onPress" />
+    </VBox>
     </Page>
 </mvc:View>

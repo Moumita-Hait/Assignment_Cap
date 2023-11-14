@@ -127,6 +127,11 @@
           "target": [
             "TargetView1"
           ]
+        },
+        {
+          "name": "View2",
+          "pattern": "View2/{startDate}/{endDate}",
+          "target": "View2"
         }
       ],
       "targets": {
@@ -136,6 +141,11 @@
           "clearControlAggregation": false,
           "viewId": "View1",
           "viewName": "View1"
+        },
+        "View2": {
+          "viewId": "View2",
+          "viewName": "View2",
+          "viewLevel": 2
         }
       }
     },
